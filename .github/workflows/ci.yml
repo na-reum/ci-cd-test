@@ -6,6 +6,9 @@ on:
   push:
     branches: [main]
 
+permissions:
+  pull-requests: write
+
 jobs:
   continuous-integration:
     runs-on: ubuntu-latest
@@ -40,3 +43,75 @@ jobs:
         env:
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Run Lighthouse CI
+        run: yarn lhci autorun || echo "Fail to Run Lighthouse CI!"
+        env:
+          LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
+
+      - name: Format lighthouse score
+        id: format_lighthouse_score
+        uses: actions/github-script@v6
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const fs = require('fs');
+
+            const results = JSON.parse(fs.readFileSync('${{ github.workspace }}/lhci_reports/manifest.json'));
+            let comments = '';
+
+            results.forEach((result, index) => {
+              const { summary, jsonPath } = result;
+              const details = JSON.parse(fs.readFileSync(jsonPath));
+              const { audits } = details;
+
+              const formatResult = (res) => Math.round(res * 100);
+              
+              Object.keys(summary).forEach((key) => {
+                summary[key] = formatResult(summary[key]);
+              });
+              
+              const score = (res) => {
+                if (res >= 90) {
+                  return '🟢';
+                }
+                if (res >= 50) {
+                  return '🟠';
+                }
+                return '🔴';
+              };
+
+              const comment = [
+                `⚡️ ${index + 1} Lighthouse report!`,
+                '| Category | Score |',
+                '| --- | --- |',
+                `| ${score(summary.performance)} Performance | ${summary.performance} |`,
+                `| ${score(summary.accessibility)} Accessibility | ${summary.accessibility} |`,
+                `| ${score(summary['best-practices'])} Best Practices | ${summary['best-practices']} |`,
+                `| ${score(summary.seo)} SEO | ${summary.seo} |`,
+                `| ${score(summary.pwa)} PWA | ${summary.pwa} |`,
+              ].join('\n');
+
+              const detail = [
+                '| Category | Score |',
+                '| --- | --- |',
+                `| ${score(audits['first-contentful-paint'].score * 100)} First Contentful Paint | ${audits['first-contentful-paint'].displayValue} |`,
+                `| ${score(audits.interactive.score * 100)} Time to Interactive | ${audits.interactive.displayValue} |`,
+                `| ${score(audits['speed-index'].score * 100)} Speed Index | ${audits['speed-index'].displayValue} |`,
+                `| ${score(audits['total-blocking-time'].score * 100)} Total Blocking Time | ${audits['total-blocking-time'].displayValue} |`,
+                `| ${score(audits['largest-contentful-paint'].score * 100)} Largest Contentful Paint | ${audits['largest-contentful-paint'].displayValue} |`,
+                `| ${score(audits['cumulative-layout-shift'].score * 100)} Cumulative Layout Shift | ${audits['cumulative-layout-shift'].displayValue} |`,
+              ].join('\n');
+
+              comments += `${comment}\n\n${detail}\n\n`;
+            });
+
+            core.setOutput('comments', comments);
+
+      - name: Comment PR
+        uses: thollander/actions-comment-pull-request@v2.3.1
+        with:
+          message: |
+            ${{ steps.format_lighthouse_score.outputs.comments}}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          pr_number: ${{ github.event.pull_request.number }}
