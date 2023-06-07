@@ -1,6 +1,6 @@
 module.exports = {
   // The rest of the Cypress config options go here...
-  projectId: "himvmq",
+  projectId: 'himvmq',
 
   e2e: {
     // We've imported your old cypress plugins here.
@@ -9,13 +9,13 @@ module.exports = {
     setupNodeEvents(_on, _config) {
       // ...
     },
-    baseUrl: "http://localhost:3000",
+    baseUrl: 'http://localhost:3000',
   },
 
   component: {
     devServer: {
-      framework: "create-react-app",
-      bundler: "webpack",
+      framework: 'create-react-app',
+      bundler: 'webpack',
     },
   },
 };
