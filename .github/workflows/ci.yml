@@ -104,23 +104,10 @@ jobs:
             });
 
             core.setOutput('comments', comments);
-      - name: Find Comment
-        if: github.event_name == 'pull_request'
-        uses: peter-evans/find-comment@v2
-        id: find_comment
-        with:
-          issue-number: ${{ github.event.pull_request.number }}
-          comment-author: 'github-actions[bot]'
-          body-includes: Lighthouses
 
-      - name: Create or update comment
-        if: github.event_name == 'pull_request'
-        uses: peter-evans/create-or-update-comment@v2
+      - name: comment PR
+        uses: unsplash/comment-on-pr@v1.3.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          comment-id: ${{ steps.find_comment.outputs.comment-id }}
-          issue-number: ${{ github.event.pull_request.number }}
-          body: |
-            ${{ steps.format_lighthouse_score.outputs.comments }}
-          edit-mode: replace
+          msg: ${{ steps.format_lighthouse_score.outputs.comments}}
