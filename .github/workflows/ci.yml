@@ -42,9 +42,9 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Run Lighthouse CI
+        run: yarn lhci autorun || echo "Fail to Run Lighthouse CI!"
         env:
           LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
-          run: yarn lhci autorun || echo "Fail to Run Lighthouse CI!"
 
       - name: Format lighthouse score
         id: format_lighthouse_score
