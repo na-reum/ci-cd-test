@@ -105,9 +105,11 @@ jobs:
 
             core.setOutput('comments', comments);
       - name: comment PR
-        uses: unsplash/comment-on-pr@v1.3.0
+        uses: peter-evans/create-or-update-comment@v2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          msg: ${{ steps.format_lighthouse_score.outputs.comments }}
-          check_for_duplicate_msg: false
+          comment-id: ${{ steps.find_comment.outputs.comment-id }}
+          issue-number: ${{ github.event.pull_request.number }}
+          body: ${{ steps.format_lighthouse_score.outputs.comments }}
+          edit-mode: replace
