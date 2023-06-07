@@ -28,7 +28,7 @@
     "test:watchAll": "jest --watchAll",
     "test:coverage": "yarn test:unit --coverage",
     "test:watchAll:coverage": "jest --watchAll --coverage",
-    "test:e2e": "cypress run",
+    "test:e2e": "start-server-and-test dev http://localhost:3000 cypress:run",
     "cypress:open": "cypress open",
     "cypress:run": "cypress run"
   },
@@ -72,7 +72,7 @@
     "jest-transform-stub": "^2.0.0",
     "prettier": "^2.8.8",
     "react-test-renderer": "^18.2.0",
-    "ts-jest": "^29.1.0",
-    "wait-on": "^7.0.1"
+    "start-server-and-test": "^2.0.0",
+    "ts-jest": "^29.1.0"
   }
 }
