@@ -21,7 +21,12 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "lint": "eslint ./src",
+    "lint": "eslint 'src/**/*.{js,jsx,ts,tsx}' --fix",
+    "test:unit": "jest",
+    "test:watch": "jest --watch",
+    "test:watchAll": "jest --watchAll",
+    "test:coverage": "yarn test:unit --coverage",
+    "test:watchAll:coverage": "jest --watchAll --coverage",
     "lint:fix": "eslint --fix ./src",
     "cypress:open": "cypress open",
     "cypress:run": "cypress run"
