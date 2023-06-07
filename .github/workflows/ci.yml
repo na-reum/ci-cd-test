@@ -31,7 +31,7 @@ jobs:
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           fail_ci_if_error: true
-S
+
       - name: Check e2e Test
         uses: cypress-io/github-action@v2
         with:
