@@ -1,10 +1,13 @@
 name: CI
 
 on:
-  pull_request:
+  pull_request_target:
     branches: [main]
   push:
     branches: [main]
+
+permissions:
+  pull-requests: write
 
 jobs:
   continuous-integration:
@@ -106,7 +109,7 @@ jobs:
             core.setOutput('comments', comments);
 
       - name: Comment PR
-        uses: thollander/actions-comment-pull-request@v2
+        uses: thollander/actions-comment-pull-request@v2.3.1
         with:
           message: |
             ${{ steps.format_lighthouse_score.outputs.comments}}
