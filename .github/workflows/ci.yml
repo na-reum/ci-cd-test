@@ -32,10 +32,11 @@ jobs:
           token: ${{ secrets.CODECOV_TOKEN }}
           fail_ci_if_error: true
 
+      - name: Wait for server
+        run: npx wait-on http://localhost:3000
+
       - name: Check e2e Test
         uses: cypress-io/github-action@v2
-        run: |
-          npx wait-on http://localhost:3000
         with:
           install: false
           command: yarn test:e2e
