@@ -105,11 +105,13 @@ jobs:
 
             core.setOutput('comments', comments);
       - name: comment PR
+        if: github.event_name == 'pull_request'
         uses: peter-evans/create-or-update-comment@v2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           comment-id: ${{ steps.find_comment.outputs.comment-id }}
           issue-number: ${{ github.event.pull_request.number }}
-          body: ${{ steps.format_lighthouse_score.outputs.comments }}
+          body: |
+            ${{ steps.format_lighthouse_score.outputs.comments }}
           edit-mode: replace
