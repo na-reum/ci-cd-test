@@ -7,13 +7,17 @@ module.exports = {
   plugins: [{ plugin: cracoEsbuildPlugin }],
   webpack: smp.wrap({
     configure: webpackConfig => {
-      webpackConfig.module.rules.push({
-        test: /\.(js|mjs|jsx)$/,
-        loader: require.resolve('babel-loader'),
-        options: {
-          presets: ['@babel/preset-react'],
-        },
-      });
+      const oneOfRule = webpackConfig.module.rules.find(rule => Array.isArray(rule.oneOf));
+
+      if (oneOfRule) {
+        oneOfRule.oneOf.unshift({
+          test: /\.(js|mjs|jsx)$/,
+          loader: require.resolve('babel-loader'),
+          options: {
+            presets: ['@babel/preset-react'],
+          },
+        });
+      }
 
       return webpackConfig;
     },
