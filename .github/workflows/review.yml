@@ -22,19 +22,27 @@ jobs:
   review:
     runs-on: ubuntu-latest
     steps:
-      - name: configure aws credentials
+      - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: ${{ secrets.AWS_REVIEW }}
           role-session-name: gha-session
           aws-region: ap-northeast-2
+
       - name: PR review
         uses: tmokmss/bedrock-pr-reviewer@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           debug: false
+          summarize: false
           review_simple_changes: false
           review_comment_lgtm: false
+          max_files: 80
+
+          path_filters: |
+            src/**
+            !.github/**
+
           bedrock_light_model: ap.anthropic.claude-haiku-4-5-20251001-v1:0
           bedrock_heavy_model: ap.anthropic.claude-sonnet-4-5-20250929-v1:0
