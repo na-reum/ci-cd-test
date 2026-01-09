@@ -36,3 +36,5 @@ jobs:
           debug: false
           review_simple_changes: false
           review_comment_lgtm: false
+          bedrock_light_model: ap.anthropic.claude-haiku-4-5-20251001-v1:0
+          bedrock_heavy_model: ap.anthropic.claude-sonnet-4-5-20250929-v1:0
