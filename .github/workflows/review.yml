@@ -36,6 +36,7 @@ jobs:
         with:
           debug: false
           summarize: false
+          disable_release_notes: true
           review_simple_changes: false
           review_comment_lgtm: false
           max_files: 80
