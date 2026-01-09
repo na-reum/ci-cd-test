@@ -34,11 +34,13 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          debug: false
+          debug: true
           summarize: false
+          bedrock_retries: 1
           disable_release_notes: true
           review_simple_changes: false
           review_comment_lgtm: false
+          bedrock_timeout_ms: 120000
           max_files: 80
 
           path_filters: |
