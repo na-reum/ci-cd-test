@@ -37,7 +37,6 @@ jobs:
           debug: true
           summarize: false
           bedrock_retries: 1
-          disable_release_notes: true
           review_simple_changes: false
           review_comment_lgtm: false
           bedrock_timeout_ms: 120000
@@ -49,4 +48,4 @@ jobs:
             !.github/**
 
           bedrock_light_model: anthropic.claude-3-haiku-20240307-v1:0
-          bedrock_heavy_model: anthropic.claude-3-5-sonnet-20241022-v2:0
+          bedrock_heavy_model: us.anthropic.claude-3-5-sonnet-20241022-v2:0
